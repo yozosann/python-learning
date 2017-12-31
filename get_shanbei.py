@@ -14,7 +14,6 @@ class BranchHTMLParser(HTMLParser):
         if tag == 'table':
             for attr in attrs:
                 if re.match(r'table', attr[1]):
-                    print('<%s>' % tag)
                     self.flag = 1
                     break
         
@@ -24,12 +23,12 @@ class BranchHTMLParser(HTMLParser):
 
     def handle_endtag(self, tag):
         if self.flag == 1 and tag == 'table':
-            print('</%s>' % tag)
             self.flag = 0
     
     def handle_data(self, data):
         if self.is_get_data and self.flag:
-            self.res.append(data)
+            self.res.append(data + '\n')
+            print(data + '\n')
             self.is_get_data = None
 
 class MasterHTMLParser(HTMLParser):
@@ -58,15 +57,21 @@ class MasterHTMLParser(HTMLParser):
 parserBranch = BranchHTMLParser()
 parserMaster = MasterHTMLParser()
 
+def getTXT(data):
+    with open('./txt/cc.txt','w') as f:
+        f.writelines(data)
+
 with request.urlopen('https://www.shanbay.com/wordbook/104791/') as f:
     data = f.read().decode('utf-8')
     parserMaster.feed(data)
     urlList = parserMaster.res
     for url in urlList:
-        open_url = urljoin("https://www.shanbay.com/", url) + '?page=1'
-        print(open_url)
-        # with request.urlopen(open_url) as f:
-        #     data = f.read().decode('utf-8')
-            # print(data)
+        for n in range(1, 11):       
+            open_url = urljoin("https://www.shanbay.com/", url) + '?page=' + str(n)
+            with request.urlopen(open_url) as f:
+                data = f.read().decode('utf-8')
+                parserBranch.feed(data)
+        getTXT(parserBranch.res)
+
         
-    
+
