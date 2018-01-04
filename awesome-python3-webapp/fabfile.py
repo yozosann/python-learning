@@ -3,7 +3,7 @@ from datetime import datetime
 
 from fabric.api import *
 
-env.hosts = ['ubuntu@ec2-13-59-147-100.us-east-2.compute.amazonaws.com']
+env.hosts = ['ubuntu@ec2-18-220-102-128.us-east-2.compute.amazonaws.com']
 env.key_filename = os.path.abspath('../../ytj8929309.pem')
 
 db_user = 'www-data'

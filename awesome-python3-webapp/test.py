@@ -1,9 +1,9 @@
-from fabric.api import run, env
-
-import os
- 
-env.hosts = ['ubuntu@ec2-13-59-147-100.us-east-2.compute.amazonaws.com']
-env.key_filename = os.path.abspath('../../ytj8929309.pem')
- 
-def hello():
-    run('ls -a')
+import socket
+sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sk.settimeout(1)
+try:
+  sk.connect(('ubuntu@ec2-18-220-102-128.us-east-2.compute.amazonaws.com',80))
+  print('Server port 80 OK!')
+except Exception:
+  print('Server port 80 not connect!')
+sk.close()
